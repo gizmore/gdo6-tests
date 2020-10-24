@@ -15,6 +15,13 @@ final class MethodTest
         return new self();
     }
     
+    public $json = false;
+    public function json($json=true)
+    {
+        $this->json = $json;
+        return $this;
+    }
+    
     public $method;
     public function method(Method $method)
     {
@@ -42,6 +49,8 @@ final class MethodTest
         $_POST = [];
         $_REQUEST = [];
         GDO_User::$CURRENT = $user;
+        
+        $_REQUEST['fmt'] = $_GET['fmt'] = $this->json ? 'json' : 'html';
         
         $_POST['form'] = [];
         $_REQUEST['form'] = [];
