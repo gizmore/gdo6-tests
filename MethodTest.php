@@ -44,11 +44,10 @@ final class MethodTest
     
     public function execute($btn='submit')
     {
-        $user = $this->user ? $this->user : GDO_User::$CURRENT;
         $_GET = [];
         $_POST = [];
         $_REQUEST = [];
-        GDO_User::$CURRENT = $user;
+        GDO_User::$CURRENT = $this->user ? $this->user : GDO_User::$CURRENT;
         
         $_REQUEST['fmt'] = $_GET['fmt'] = $this->json ? 'json' : 'html';
         
@@ -63,7 +62,11 @@ final class MethodTest
         $_POST[$btn] = $btn;
         $_REQUEST[$btn] = $btn;
         
-        return $this->method->execute();
+        $response = $this->method->execute();
+        
+        assert($response->code === 200);
+        
+        return $response;
     }
     
 }
