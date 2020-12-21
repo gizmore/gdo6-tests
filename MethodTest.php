@@ -9,6 +9,7 @@ use GDO\Util\Classes;
 use GDO\DB\GDT_Int;
 use GDO\DB\GDT_Decimal;
 use function PHPUnit\Framework\assertTrue;
+use function PHPUnit\Framework\assertEquals;
 
 /**
  * Helper Class to test a gdo method.
@@ -16,11 +17,20 @@ use function PHPUnit\Framework\assertTrue;
  */
 final class MethodTest
 {
+    # 0 - gizmore (admin)
+    # 1 - Peter (staff)
+    # 2 - Monica (member)
+    # 3 - Gaston (guest)
+    public static $USERS = []; # store some users here for testing.
+    
     public static function make()
     {
         return new self();
     }
     
+    ###############
+    ### Options ###
+    ###############
     public $json = false;
     public function json($json=true)
     {
@@ -46,33 +56,46 @@ final class MethodTest
     public function user(GDO_User $user)
     {
         $this->user = $user;
+        return $this;
     }
     
+    ############
+    ### Exec ###
+    ############
+    /**
+     * Execute the settings. Copy the parameters into request array. 
+     * @param string $btn
+     * @return \GDO\Core\GDT_Response
+     */
     public function execute($btn='submit')
     {
         $_GET = [];
         $_POST = [];
         $_REQUEST = [];
-        GDO_User::$CURRENT = $this->user ? $this->user : GDO_User::$CURRENT;
         
+        # Set user if desired. Default is admin gizmore.
+        if ($this->user) GDO_User::setCurrent($this->user);
+        
+        # Set options
         $_REQUEST['fmt'] = $_GET['fmt'] = $this->json ? 'json' : 'html';
-        
+        $_REQUEST['ajax'] = $_GET['ajax'] = $this->json ? '1' : '0';
+
+        # Copy params
         $_POST['form'] = [];
         $_REQUEST['form'] = [];
+        $_POST['form'][$btn] = $btn;
+        $_REQUEST['form'][$btn] = $btn;
         foreach ($this->parameters as $key => $value)
         {
             $_POST['form'][$key] = $value;
             $_REQUEST['form'][$key] = $value;
         }
         
-        $_POST[$btn] = $btn;
-        $_REQUEST[$btn] = $btn;
-        
+        # Exec
         $this->method->init();
-        
+        echo "Executing Method {$this->method->getModuleName()}::{$this->method->getMethodName()}\n"; ob_flush();
         $response = $this->method->exec();
-        
-        assertTrue($response->code === 200);
+        ob_flush();
         
         return $response;
     }
@@ -112,7 +135,7 @@ final class MethodTest
      * @param GDT $gdt
      * @return string
      */
-    private function plugParam(GDT $gdt)
+    public function plugParam(GDT $gdt)
     {
         # Select first object
         if (Classes::class_uses_trait($gdt, 'GDO\\DB\\WithObject'))

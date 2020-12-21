@@ -1,7 +1,7 @@
 <?php
 namespace GDO\Tests\Test;
 
-use PHPUnit\Framework\TestCase;
+use GDO\Tests\TestCase;
 
 final class TestTest extends TestCase
 {
