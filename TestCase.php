@@ -5,6 +5,8 @@ use GDO\Core\GDT_Response;
 use GDO\UI\GDT_Page;
 use GDO\User\GDO_User;
 use function PHPUnit\Framework\assertEquals;
+use GDO\Session\GDO_Session;
+use GDO\Core\Method;
 
 /**
  * A GDO test case knows a few helper functions and sets up a clean response environment.
@@ -20,6 +22,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
     #################
     protected function setUp(): void
     {
+        # Clear input
+        $_REQUEST = $_POST = $_GET = [];
+        
         # Clear code
         GDT_Response::$CODE = 200;
         
@@ -35,6 +40,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $user = count(MethodTest::$USERS) ? MethodTest::$USERS[0] : GDO_User::system();
         $this->user($user);
     }
+    
+    protected function session(GDO_User $user)
+    {
+        GDO_Session::$INSTANCE = $session = new GDO_Session();
+        $session->setVar('sess_user', $user->getID());
+    }
 
     ###################
     ### User switch ###
@@ -46,14 +57,18 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function monica() { return MethodTest::$USERS[2]; }
     protected function gaston() { return MethodTest::$USERS[3]; }
     
-    protected function userGhost() { $this->user(GDO_User::ghost()); } # ID 0
-    protected function userSystem() { $this->user(GDO_User::system()); } # ID 1 
-    protected function userGizmore() { $this->user($this->gizmore()); } # Admin 
-    protected function userPeter() { $this->user($this->peter()); } # Staff
-    protected function userMonica() { $this->user($this->monica()); } # Member
-    protected function userGaston() { $this->user($this->gaston()); } # Guest
+    protected function userGhost() { return $this->user(GDO_User::ghost()); } # ID 0
+    protected function userSystem() { return $this->user(GDO_User::system()); } # ID 1 
+    protected function userGizmore() { return $this->user($this->gizmore()); } # Admin 
+    protected function userPeter() { return $this->user($this->peter()); } # Staff
+    protected function userMonica() { return $this->user($this->monica()); } # Member
+    protected function userGaston() { return $this->user($this->gaston()); } # Guest
     
-    protected function user(GDO_User $user) { GDO_User::setCurrent($user); }
+    protected function user(GDO_User $user)
+    {
+        $this->session($user);
+        return GDO_User::setCurrent($user);
+    }
     
     ###################
     ### Assert code ###
@@ -63,6 +78,17 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function assertCode($code, $message)
     {
         assertEquals($code, GDT_Response::$CODE, $message);
+    }
+    
+    ###################
+    ### Call method ###
+    ###################
+    protected function callMethod(Method $method, array $parameters=null)
+    {
+        $r = MethodTest::make()->method($method)->user(GDO_User::current())->parameters($parameters)->execute();
+        $this->assert200(sprintf('Test if %s::%s response code is 200.', 
+            $method->getModuleName(), $method->getMethodName()));
+        return $r;
     }
     
 }

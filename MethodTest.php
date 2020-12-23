@@ -10,6 +10,7 @@ use GDO\DB\GDT_Int;
 use GDO\DB\GDT_Decimal;
 use function PHPUnit\Framework\assertTrue;
 use function PHPUnit\Framework\assertEquals;
+use GDO\DB\WithObject;
 
 /**
  * Helper Class to test a gdo method.
@@ -46,9 +47,19 @@ final class MethodTest
     }
     
     public $parameters = [];
-    public function parameters(array $parameters)
+    public function parameters(array $parameters=null)
     {
-        $this->parameters = $parameters;
+        if ($parameters)
+        {
+            $this->parameters = $parameters;
+        }
+        return $this;
+    }
+    
+    public $getParameters = [];
+    public function getParameters(array $getParameters)
+    {
+        $this->getParameters = $getParameters;
         return $this;
     }
     
@@ -80,7 +91,13 @@ final class MethodTest
         $_REQUEST['fmt'] = $_GET['fmt'] = $this->json ? 'json' : 'html';
         $_REQUEST['ajax'] = $_GET['ajax'] = $this->json ? '1' : '0';
 
-        # Copy params
+        # Get params
+        foreach ($this->getParameters as $k => $v)
+        {
+            $_REQUEST[$k] = $_GET[$k] = $v;
+        }
+        
+        # Form params
         $_POST['form'] = [];
         $_REQUEST['form'] = [];
         $_POST['form'][$btn] = $btn;
@@ -121,7 +138,7 @@ final class MethodTest
             {
                 if (!isset($parameters[$name]))
                 {
-                    $parameters[$name] = $this->plugParam($gdt);
+                    $parameters[$name] = $this->plugParam($gdt, $method);
                 }
             }
         }
@@ -135,12 +152,15 @@ final class MethodTest
      * @param GDT $gdt
      * @return string
      */
-    public function plugParam(GDT $gdt)
+    public function plugParam(GDT $gdt, Method $method)
     {
+        $klass = get_class($gdt);
+        echo "Try to auto plug {$method->getModuleName()}::{$method->getMethodName()}.{$gdt->name} which is a {$klass}\n";
+        
         # Select first object
         if (Classes::class_uses_trait($gdt, 'GDO\\DB\\WithObject'))
         {
-            return $gdt->gdo->table()->select()->first()->exec()->fetchObject()->getID();
+            return $gdt->table->select()->first()->exec()->fetchObject()->getID();
         }
         
         # Title and description
