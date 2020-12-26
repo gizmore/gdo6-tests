@@ -11,6 +11,8 @@ use GDO\DB\GDT_Decimal;
 use function PHPUnit\Framework\assertTrue;
 use function PHPUnit\Framework\assertEquals;
 use GDO\DB\WithObject;
+use GDO\Form\MethodForm;
+use GDO\Language\GDO_Language;
 
 /**
  * Helper Class to test a gdo method.
@@ -97,19 +99,23 @@ final class MethodTest
             $_REQUEST[$k] = $_GET[$k] = $v;
         }
         
+        $frm = ($this->method instanceof MethodForm) ? $this->method->formName() : 'form';
+        
         # Form params
-        $_POST['form'] = [];
-        $_REQUEST['form'] = [];
-        $_POST['form'][$btn] = $btn;
-        $_REQUEST['form'][$btn] = $btn;
+        $_POST[$frm] = [];
+        $_REQUEST[$frm] = [];
+        $_POST[$frm][$btn] = $btn;
+        $_REQUEST[$frm][$btn] = $btn;
         foreach ($this->parameters as $key => $value)
         {
-            $_POST['form'][$key] = $value;
-            $_REQUEST['form'][$key] = $value;
+            $_POST[$frm][$key] = $value;
+            $_REQUEST[$frm][$key] = $value;
         }
         
+        $_GET['mo'] = $_REQUEST['mo'] = $this->method->getModuleName();
+        $_GET['me'] = $_REQUEST['me'] = $this->method->getMethodName();
+        
         # Exec
-        $this->method->init();
         echo "Executing Method {$this->method->getModuleName()}::{$this->method->getMethodName()}\n"; ob_flush();
         $response = $this->method->exec();
         ob_flush();
@@ -160,6 +166,10 @@ final class MethodTest
         # Select first object
         if (Classes::class_uses_trait($gdt, 'GDO\\DB\\WithObject'))
         {
+            if ($gdt->table instanceof GDO_Language)
+            {
+                return GDO_Language::current()->getISO();
+            }
             return $gdt->table->select()->first()->exec()->fetchObject()->getID();
         }
         

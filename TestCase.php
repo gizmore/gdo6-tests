@@ -7,6 +7,9 @@ use GDO\User\GDO_User;
 use function PHPUnit\Framework\assertEquals;
 use GDO\Session\GDO_Session;
 use GDO\Core\Method;
+use GDO\Net\GDT_IP;
+use GDO\Core\Website;
+use GDO\User\Module_User;
 
 /**
  * A GDO test case knows a few helper functions and sets up a clean response environment.
@@ -20,8 +23,25 @@ class TestCase extends \PHPUnit\Framework\TestCase
     #################
     ### Init test ###
     #################
+    private $ipc = 0;
+    private $ipd = 1;
+    private function nextIP()
+    {
+        $this->ipd++;
+        if ($this->ipd>255)
+        {
+            $this->ipd = 1;
+            $this->ipc++;
+        }
+        $ip = sprintf('127.0.%d.%d', $this->ipc, $this->ipd);
+        return $ip;
+    }
+    
     protected function setUp(): void
     {
+        # Increase IP
+        GDT_IP::$CURRENT = $this->nextIP();
+        
         # Clear input
         $_REQUEST = $_POST = $_GET = [];
         
@@ -35,10 +55,14 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $p->rightNav ? $p->rightNav->clearFields() : 0;
         $p->bottomNav ? $p->bottomNav->clearFields() : 0;
         $p->topTabs ? $p->topTabs->clearFields() : 0;
+        Website::$TOP_RESPONSE = null;
         
         # Set gizmore user
-        $user = count(MethodTest::$USERS) ? MethodTest::$USERS[0] : GDO_User::system();
-        $this->user($user);
+        if (Module_User::instance()->isPersisted())
+        {
+            $user = count(MethodTest::$USERS) ? MethodTest::$USERS[0] : GDO_User::system();
+            $this->user($user);
+        }
     }
     
     protected function session(GDO_User $user)
