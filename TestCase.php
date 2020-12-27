@@ -107,9 +107,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
     ###################
     ### Call method ###
     ###################
-    protected function callMethod(Method $method, array $parameters=null)
+    protected function callMethod(Method $method, array $parameters=null, array $getParameters=null)
     {
-        $r = MethodTest::make()->method($method)->user(GDO_User::current())->parameters($parameters)->execute();
+        $r = MethodTest::make()->method($method)->user(GDO_User::current())->parameters($parameters)->getParameters($getParameters)->execute();
         $this->assert200(sprintf('Test if %s::%s response code is 200.', 
             $method->getModuleName(), $method->getMethodName()));
         return $r;

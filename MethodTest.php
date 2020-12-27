@@ -10,9 +10,9 @@ use GDO\DB\GDT_Int;
 use GDO\DB\GDT_Decimal;
 use function PHPUnit\Framework\assertTrue;
 use function PHPUnit\Framework\assertEquals;
-use GDO\DB\WithObject;
 use GDO\Form\MethodForm;
 use GDO\Language\GDO_Language;
+use GDO\Net\GDT_Url;
 
 /**
  * Helper Class to test a gdo method.
@@ -59,9 +59,12 @@ final class MethodTest
     }
     
     public $getParameters = [];
-    public function getParameters(array $getParameters)
+    public function getParameters(array $getParameters=null)
     {
-        $this->getParameters = $getParameters;
+        if ($getParameters)
+        {
+            $this->getParameters = $getParameters;
+        }
         return $this;
     }
     
@@ -155,6 +158,7 @@ final class MethodTest
     
     /**
      * Try to guess default params for a GDT.
+     * 
      * @param GDT $gdt
      * @return string
      */
@@ -170,7 +174,25 @@ final class MethodTest
             {
                 return GDO_Language::current()->getISO();
             }
+            
+            if (@$gdt->multiple)
+            {
+                return '["' . $gdt->table->select()->first()->exec()->fetchObject()->getID() . '"]';
+            }
+            
             return $gdt->table->select()->first()->exec()->fetchObject()->getID();
+        }
+        
+        if ($gdt instanceof GDT_Url)
+        {
+            if ($gdt->allowExternal)
+            {
+                return "https://www.wechall.net";
+            }
+            else
+            {
+                return hrefDefault();
+            }
         }
         
         # Title and description

@@ -19,11 +19,11 @@ final class ResponseTest extends TestCase
         $r2 = GDT_Response::make();
         $p2 = GDT_Paragraph::make()->textRaw('par2');
         $r2->addField($p2);
-        $r1->add($r2);
         $c = GDT_Container::make();
         $p3 = GDT_Paragraph::make()->textRaw('par3');
         $c->addField($p3);
         $r2->addField($c);
+        $r1->add($r2);
         
         $html = $r1->render();
         

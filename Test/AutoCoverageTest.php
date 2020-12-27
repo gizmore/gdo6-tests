@@ -163,7 +163,7 @@ final class AutoCoverageTest extends TestCase
 //                 $var = $gdt->getVar();
 //                 assertNull($var, 'Test if null values stay null by calling toVar() and toValue() on '.$klass);
                 $count++;
-                assert($count > 0); # fake assert
+                assertTrue(!!$gdt, "Check if GDT can be created."); # fake assert
             }
         }
         echo "$count GDT tested\n";
