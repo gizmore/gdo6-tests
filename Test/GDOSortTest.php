@@ -1,17 +1,16 @@
 <?php
 namespace GDO\Core\Test;
 
-use GDO\Core\ModuleLoader;
 use GDO\Tests\TestCase;
 use GDO\Language\GDO_Language;
-use GDO\Core\GDO;
+use GDO\Table\GDT_Table;
 
 final class GDOSortTest extends TestCase
 {
     public function testGDOSorting()
     {
         $gdos = GDO_Language::table()->all();
-        
+        GDT_Table::make()->addHeaders($gdos->gdo);
     }
     
 }

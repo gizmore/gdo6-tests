@@ -1,5 +1,5 @@
 <?php
-namespace GDO\Core\Test;
+namespace GDO\Tests\Test;
 
 use GDO\User\GDO_User;
 use GDO\Util\BCrypt;
