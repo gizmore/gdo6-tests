@@ -67,7 +67,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     
     protected function session(GDO_User $user)
     {
-        GDO_Session::$INSTANCE = $session = new GDO_Session();
+        GDO_Session::$INSTANCE = $session = GDO_Session::blank();
         $session->setVar('sess_user', $user->getID());
     }
 
