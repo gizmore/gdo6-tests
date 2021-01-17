@@ -9,8 +9,8 @@ final class GDOSortTest extends TestCase
 {
     public function testGDOSorting()
     {
-        $gdos = GDO_Language::table()->all();
-        GDT_Table::make()->addHeaders($gdos->gdo);
+//         $gdos = GDO_Language::table()->all();
+//         GDT_Table::make()->addHeaders($gdos->gdo);
     }
     
 }
