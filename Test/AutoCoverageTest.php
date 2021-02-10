@@ -15,6 +15,7 @@ use function PHPUnit\Framework\assertInstanceOf;
 use function PHPUnit\Framework\assertEquals;
 use GDO\Form\MethodForm;
 use GDO\Core\GDT_Response;
+use GDO\Cronjob\MethodCronjob;
 
 /**
  * Automated coverage tests for all modules.
@@ -217,6 +218,12 @@ final class AutoCoverageTest extends TestCase
                 
                 /** @var $method \GDO\Core\Method **/
                 $method = call_user_func([$klass, 'make']);
+                
+                if ( ($method instanceof MethodCronjob) || (!$method->isTrivial()) )
+                {
+                    continue;
+                }
+                
                 
                 $methodName =  $method->getModuleName() . '::' . $method->getMethodName();
                 

@@ -13,6 +13,8 @@ use function PHPUnit\Framework\assertEquals;
 use GDO\Form\MethodForm;
 use GDO\Language\GDO_Language;
 use GDO\Net\GDT_Url;
+use GDO\Core\GDT_Response;
+use GDO\DB\GDT_Name;
 
 /**
  * Helper Class to test a gdo method.
@@ -85,6 +87,7 @@ final class MethodTest
      */
     public function execute($btn='submit')
     {
+        GDT_Response::$CODE = 200;
         $_GET = [];
         $_POST = [];
         $_REQUEST = [];
@@ -196,6 +199,11 @@ final class MethodTest
         }
         
         # Title and description
+        if ($gdt instanceof GDT_Name)
+        {
+            return 'Name';
+        }
+        
         if ($gdt instanceof GDT_String)
         {
             return "Test String <script>alert(1);</script>";
