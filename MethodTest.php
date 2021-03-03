@@ -126,6 +126,8 @@ final class MethodTest
         $response = $this->method->exec();
         ob_flush();
         
+        $_REQUEST = []; $_GET = []; $_POST = [];
+        
         return $response;
     }
     
