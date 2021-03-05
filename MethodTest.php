@@ -145,20 +145,45 @@ final class MethodTest
     {
         $method = method($moduleName, $methodName);
         
+        $getParameters = $parameters;
+        
         # Plug default params
         foreach ($method->gdoParameterCache() as $name => $gdt)
         {
             if ($gdt->notNull && $gdt->getVar() === null)
             {
-                if (!isset($parameters[$name]))
+                if (!isset($getParameters[$name]))
                 {
-                    $parameters[$name] = $this->plugParam($gdt, $method);
+                    if ($plugVar = $this->plugParam($gdt, $method))
+                    {
+                        $getParameters[$name] = $plugVar;
+                    }
+                }
+            }
+        }
+        
+        if ($method instanceof MethodForm)
+        {
+            foreach ($method->getForm()->getFieldsRec() as $name => $gdt)
+            {
+                if ($gdt->notNull && $gdt->getVar() === null)
+                {
+                    if (!isset($parameters[$name]))
+                    {
+                        if ($plugVar = $this->plugParam($gdt, $method))
+                        {
+                            $parameters[$name] = $plugVar;
+                        }
+                    }
                 }
             }
         }
         
         # Exec
-        return self::make()->method($method)->parameters($parameters)->execute($button);
+        return self::make()->method($method)->
+            parameters($parameters)->
+            getParameters($getParameters)->
+            execute($button);
     }
     
     /**
@@ -170,56 +195,16 @@ final class MethodTest
     public function plugParam(GDT $gdt, Method $method)
     {
         $klass = get_class($gdt);
-        echo "Try to auto plug {$method->getModuleName()}::{$method->getMethodName()}.{$gdt->name} which is a {$klass}\n";
-        
-        # Select first object
-        if (Classes::class_uses_trait($gdt, 'GDO\\DB\\WithObject'))
+        $plugvar = $gdt->plugVar();
+        if ($plugvar)
         {
-            if ($gdt->table instanceof GDO_Language)
-            {
-                return GDO_Language::current()->getISO();
-            }
-            
-            if (@$gdt->multiple)
-            {
-                return '["' . $gdt->table->select()->first()->exec()->fetchObject()->getID() . '"]';
-            }
-            
-            return $gdt->table->select()->first()->exec()->fetchObject()->getID();
+            echo "Try to auto plug {$method->getModuleName()}::{$method->getMethodName()}.{$gdt->name} which is a {$klass} with {$plugvar}\n";
         }
-        
-        if ($gdt instanceof GDT_Url)
+        else
         {
-            if ($gdt->allowExternal)
-            {
-                return "https://www.wechall.net";
-            }
-            else
-            {
-                return hrefDefault();
-            }
+            echo "FAILED to auto plug {$method->getModuleName()}::{$method->getMethodName()}.{$gdt->name} which is a {$klass} with {$plugvar}\n";
         }
-        
-        # Title and description
-        if ($gdt instanceof GDT_Name)
-        {
-            return 'Name';
-        }
-        
-        if ($gdt instanceof GDT_String)
-        {
-            return "Test String <script>alert(1);</script>";
-        }
-        
-        if ($gdt instanceof GDT_Int)
-        {
-            return "4"; # chosen by fair avg dice roll.
-        }
-        
-        if ($gdt instanceof GDT_Decimal)
-        {
-            return "3.14";
-        }
+        return $plugvar;
     }
 
 }
