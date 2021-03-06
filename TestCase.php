@@ -10,6 +10,7 @@ use GDO\Core\Method;
 use GDO\Net\GDT_IP;
 use GDO\Core\Website;
 use GDO\User\Module_User;
+use GDO\User\GDO_UserPermission;
 
 /**
  * A GDO test case knows a few helper functions and sets up a clean response environment.
@@ -62,6 +63,26 @@ class TestCase extends \PHPUnit\Framework\TestCase
         {
             $user = count(MethodTest::$USERS) ? MethodTest::$USERS[0] : GDO_User::system();
             $this->user($user);
+            $this->restoreUserPermissions($user);
+        }
+    }
+    
+    /**
+     * Restore gizmore because auto coverage messes with him a lot.
+     * @param GDO_User $user
+     */
+    protected function restoreUserPermissions(GDO_User $user)
+    {
+        if (count(MethodTest::$USERS))
+        {
+            if ($user->getID() === MethodTest::$USERS[0]->getID())
+            {
+                $table = GDO_UserPermission::table();
+                $table->grant($user, 'admin');
+                $table->grant($user, 'staff');
+                $table->grant($user, 'cronjob');
+                $user->changedPermissions();
+            }
         }
     }
     

@@ -10,21 +10,13 @@ use function PHPUnit\Framework\assertTrue;
 use function PHPUnit\Framework\assertFalse;
 
 /**
- * Automated coverage tests for all modules.
+ * Generate a few users to work with.
  * 
- * - Generate a few users to work with
- * - Require every file - Is Problematic for multi-provider modules and templates.
- * - Make one instance of every GDT encountered.
- * - Test NULL handling on every GDT encountered.
- * - Make one instance of every GDO encountered.
- * - Try to exec every method that only has default paramaters - @TODO Many methods need to fulfil the gdoParameters() paradigm. 
- * 
- * @TODO: Move this to the Module_Tests. Make Module_Tests prio 0. 
  * @author gizmore
- * @version 6.10
- * @since 6.10
+ * @version 6.10.1
+ * @since 6.10.0
  */
-final class AutoCoverageTest extends TestCase
+final class UserPermissionTest extends TestCase
 {
     public function testDefaultUsers()
     {
@@ -37,6 +29,7 @@ final class AutoCoverageTest extends TestCase
             'user_password' => BCrypt::create('11111111')->__toString(),
         ])->replace();
         GDO_UserPermission::table()->grant($user, 'admin');
+        GDO_UserPermission::table()->grant($user, 'cronjob');
         GDO_UserPermission::table()->grant($user, 'staff');
         MethodTest::$USERS[] = $user;
         $user->changedPermissions();
@@ -69,7 +62,7 @@ final class AutoCoverageTest extends TestCase
         assertFalse($user->isGuest(), 'Test if members are non guests.');
         assertTrue($user->isMember(), 'Test if members are members.');
         
-        # User 4 is guest
+        # User 5 is guest
         $user = GDO_User::blank([
             'user_id' => '3',
             'user_guest_name' => 'Gaston',

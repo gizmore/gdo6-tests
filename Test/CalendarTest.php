@@ -21,8 +21,8 @@ final class CalendarTest extends TestCase
     public function testMilliseconds()
     {
         $date = Time::getDate();
-        assertStringContainsString(".", $date);
-        assertStringNotContainsString(".000", $date); # yaya... this can give a false positive fail. 1 permille chance :)
+        assertStringContainsString(".", $date, 'Test if date contains a dot for milliseconds.');
+        assertStringNotContainsString(".000", $date, 'Test if date has non .000 milliseconds in current date. yaya... this can give a false positive fail. 1 permille chance :)');
     }
     
 }

@@ -4,17 +4,10 @@ namespace GDO\Tests;
 use GDO\Core\GDT;
 use GDO\Core\Method;
 use GDO\User\GDO_User;
-use GDO\DB\GDT_String;
-use GDO\Util\Classes;
-use GDO\DB\GDT_Int;
-use GDO\DB\GDT_Decimal;
 use function PHPUnit\Framework\assertTrue;
 use function PHPUnit\Framework\assertEquals;
 use GDO\Form\MethodForm;
-use GDO\Language\GDO_Language;
-use GDO\Net\GDT_Url;
 use GDO\Core\GDT_Response;
-use GDO\DB\GDT_Name;
 
 /**
  * Helper Class to test a gdo method.
@@ -87,6 +80,7 @@ final class MethodTest
      */
     public function execute($btn='submit')
     {
+        # Reset request and response.
         GDT_Response::$CODE = 200;
         $_GET = [];
         $_POST = [];
@@ -199,10 +193,12 @@ final class MethodTest
         if ($plugvar)
         {
             echo "Try to auto plug {$method->getModuleName()}::{$method->getMethodName()}.{$gdt->name} which is a {$klass} with {$plugvar}\n";
+            ob_flush();
         }
         else
         {
             echo "FAILED to auto plug {$method->getModuleName()}::{$method->getMethodName()}.{$gdt->name} which is a {$klass} with {$plugvar}\n";
+            ob_flush();
         }
         return $plugvar;
     }
