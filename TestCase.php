@@ -11,6 +11,8 @@ use GDO\Net\GDT_IP;
 use GDO\Core\Website;
 use GDO\User\Module_User;
 use GDO\User\GDO_UserPermission;
+use GDO\Core\Application;
+use GDO\Language\Trans;
 
 /**
  * A GDO test case knows a few helper functions and sets up a clean response environment.
@@ -40,6 +42,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
     
     protected function setUp(): void
     {
+        # Increase Time
+        Application::updateTime();
+        
         # Increase IP
         GDT_IP::$CURRENT = $this->nextIP();
         
@@ -62,8 +67,14 @@ class TestCase extends \PHPUnit\Framework\TestCase
         if (Module_User::instance()->isPersisted())
         {
             $user = count(MethodTest::$USERS) ? MethodTest::$USERS[0] : GDO_User::system();
-            $this->user($user);
-            $this->restoreUserPermissions($user);
+            if ($user)
+            {
+                $this->user($user);
+                if (!$user->isSystem())
+                {
+                    $this->restoreUserPermissions($user);
+                }
+            }
         }
     }
     
@@ -112,6 +123,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function user(GDO_User $user)
     {
         $this->session($user);
+        Trans::setISO($user->getLangISO());
         return GDO_User::setCurrent($user);
     }
     
