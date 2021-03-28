@@ -49,7 +49,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         GDT_IP::$CURRENT = $this->nextIP();
         
         # Clear input
-        $_REQUEST = $_POST = $_GET = [];
+        $_REQUEST = $_POST = $_GET = $_FILES = [];
         
         # Clear code
         GDT_Response::$CODE = 200;
