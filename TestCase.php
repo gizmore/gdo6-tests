@@ -12,6 +12,7 @@ use GDO\Core\Website;
 use GDO\User\Module_User;
 use GDO\User\GDO_UserPermission;
 use GDO\Core\Application;
+use GDO\File\FileUtil;
 use GDO\Language\Trans;
 
 /**
@@ -146,6 +147,19 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->assert200(sprintf('Test if %s::%s response code is 200.', 
             $method->getModuleName(), $method->getMethodName()));
         return $r;
+    }
+    
+    protected function fakeFileUpload($fieldName, $fileName, $path)
+    {
+        $dest = Module_Tests::instance()->tempPath($fileName);
+        copy($path, $dest);
+        $_FILES[$fieldName] = [
+            'name' => $fileName,
+            'type' => FileUtil::mimetype($dest),
+            'tmp_name' => $dest,
+            'error' => 0,
+            'size' => filesize($dest),
+        ];
     }
     
 }
