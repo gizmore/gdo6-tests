@@ -1,5 +1,5 @@
 <?php
-namespace GDO\UI\Test;
+namespace GDO\Tests\Test;
 
 use GDO\Tests\TestCase;
 use GDO\UI\GDT_Message;
