@@ -1,2 +1,1 @@
-core.impressum
-core.privacy
+account.form
