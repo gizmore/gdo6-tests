@@ -1,5 +1,5 @@
 <?php
-namespace GDO\Core\Test;
+namespace GDO\Tests\Test;
 
 use GDO\Core\GDT_Response;
 use GDO\Tests\TestCase;
@@ -23,7 +23,7 @@ final class ResponseTest extends TestCase
         $p3 = GDT_Paragraph::make()->textRaw('par3');
         $c->addField($p3);
         $r2->addField($c);
-        $r1->add($r2);
+        $r1->addField($r2);
         
         $html = $r1->renderHTML();
         
@@ -37,7 +37,7 @@ final class ResponseTest extends TestCase
         $r1 = GDT_Response::make();
         $p1 = GDT_Paragraph::make()->textRaw('par1');
         $r1->addField($p1);
-        $r1->add(null);
+        $r1->addField(null);
         assertEquals(200, GDT_Response::$CODE);
     }
 
