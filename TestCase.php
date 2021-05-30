@@ -57,12 +57,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         
         # Clear navs
         $p = GDT_Page::$INSTANCE;
-        $p->topNav ? $p->topNav->clearFields() : 0;
-        $p->leftNav ? $p->leftNav->clearFields() : 0;
-        $p->rightNav ? $p->rightNav->clearFields() : 0;
-        $p->bottomNav ? $p->bottomNav->clearFields() : 0;
-        $p->topTabs ? $p->topTabs->clearFields() : 0;
-        Website::$TOP_RESPONSE = null;
+        $p->reset();
         
         # Set gizmore user
         if (Module_User::instance()->isPersisted())
