@@ -19,6 +19,7 @@ final class MethodTest
     # 1 - Peter (staff)
     # 2 - Monica (member)
     # 3 - Gaston (guest)
+    # 4 - Sven (staff)
     public static $USERS = []; # store some users here for testing.
     
     public static function make()

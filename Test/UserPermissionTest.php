@@ -13,7 +13,7 @@ use function PHPUnit\Framework\assertFalse;
  * Generate a few users to work with.
  * 
  * @author gizmore
- * @version 6.10.1
+ * @version 6.10.4
  * @since 6.10.0
  */
 final class UserPermissionTest extends TestCase
@@ -64,7 +64,7 @@ final class UserPermissionTest extends TestCase
         
         # User 5 is guest
         $user = GDO_User::blank([
-            'user_id' => '3',
+            'user_id' => '5',
             'user_guest_name' => 'Gaston',
             'user_type' => 'guest',
         ])->replace();
@@ -73,6 +73,22 @@ final class UserPermissionTest extends TestCase
         assertFalse($user->isStaff(), "Test if staff permissions are assigned correctly.");
         assertTrue($user->isGuest(), 'Test if guests are guests.');
         assertFalse($user->isMember(), 'Test if guests are non members.');
+        
+        # User 6 is sven / staff
+        $user = GDO_User::blank([
+            'user_id' => '6',
+            'user_name' => 'Sven',
+            'user_type' => 'member',
+        ])->replace();
+        GDO_UserPermission::table()->grant($user, 'staff');
+        MethodTest::$USERS[] = $user;
+        $user->changedPermissions();
+        assertFalse($user->isGhost(), "Test if staff is not ghost.");
+        assertFalse($user->isGuest(), "Test if staff is not guest.");
+        assertFalse($user->isAdmin(), "Test if staff is not admin.");
+        assertTrue($user->isStaff(), "Test if staff has staff permissions assigned correctly.");
+        assertTrue($user->isMember(), "Test if staff is a member.");
+        
     }
     
 }
