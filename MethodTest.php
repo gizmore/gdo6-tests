@@ -8,6 +8,7 @@ use function PHPUnit\Framework\assertTrue;
 use function PHPUnit\Framework\assertEquals;
 use GDO\Form\MethodForm;
 use GDO\Core\GDT_Response;
+use GDO\Form\GDT_Form;
 
 /**
  * Helper Class to test a gdo method.
@@ -100,7 +101,7 @@ final class MethodTest
             $_REQUEST[$k] = $_GET[$k] = $v;
         }
         
-        $frm = ($this->method instanceof MethodForm) ? $this->method->formName() : 'form';
+        $frm = ($this->method instanceof MethodForm) ? $this->method->formName() : GDT_Form::DEFAULT_NAME;
         
         # Form params
         $_POST[$frm] = [];
