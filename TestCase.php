@@ -17,6 +17,7 @@ use GDO\File\FileUtil;
 use GDO\Language\Trans;
 use GDO\Util\CLI;
 use GDO\Core\Website;
+use GDO\Date\Time;
 
 /**
  * A GDO test case knows a few helper functions.
@@ -143,6 +144,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         $this->session($user);
         Trans::setISO($user->getLangISO());
+        Time::setTimezone($user->getTimezone());
         return GDO_User::setCurrent($user);
     }
     
