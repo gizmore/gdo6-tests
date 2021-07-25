@@ -18,6 +18,7 @@ use GDO\Language\Trans;
 use GDO\Util\CLI;
 use GDO\Core\Website;
 use GDO\Date\Time;
+use GDO\Date\Module_Date;
 
 /**
  * A GDO test case knows a few helper functions.
@@ -231,6 +232,19 @@ class TestCase extends \PHPUnit\Framework\TestCase
             Application::instance()->cli(false);
             ob_end_clean();
         }
+    }
+    
+    ############
+    ### Lang ###
+    ############
+    public function lang($iso)
+    {
+        Trans::setISO($iso);
+    }
+    
+    public function timezone($tz)
+    {
+        Time::setTimezone($tz);
     }
     
 }
