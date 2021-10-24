@@ -92,8 +92,8 @@ final class MethodTest
         if ($this->user) GDO_User::setCurrent($this->user);
         
         # Set options
-        $_REQUEST['fmt'] = $_GET['fmt'] = $this->json ? 'json' : 'html';
-        $_REQUEST['ajax'] = $_GET['ajax'] = $this->json ? '1' : '0';
+        $_REQUEST['_fmt'] = $_GET['_fmt'] = $this->json ? 'json' : 'html';
+        $_REQUEST['_ajax'] = $_GET['_ajax'] = $this->json ? '1' : '0';
 
         # Get params
         foreach ($this->getParameters as $k => $v)
