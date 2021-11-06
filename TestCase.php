@@ -15,10 +15,9 @@ use GDO\User\GDO_UserPermission;
 use GDO\Core\Application;
 use GDO\File\FileUtil;
 use GDO\Language\Trans;
-use GDO\Util\CLI;
+use GDO\CLI\CLI;
 use GDO\Core\Website;
 use GDO\Date\Time;
-use GDO\Date\Module_Date;
 
 /**
  * A GDO test case knows a few helper functions.
