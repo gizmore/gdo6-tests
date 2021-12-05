@@ -152,7 +152,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     ### Assert code ###
     ###################
     protected function assert200($message) { $this->assertCode(200, $message); }
-    protected function assert405($message) { $this->assertCode(405, $message); }
+    protected function assert409($message) { $this->assertCode(409, $message); }
     protected function assertCode($code, $message)
     {
         assertEquals($code, GDT_Response::$CODE, $message);
