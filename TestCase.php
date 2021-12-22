@@ -18,6 +18,7 @@ use GDO\Language\Trans;
 use GDO\CLI\CLI;
 use GDO\Core\Website;
 use GDO\Date\Time;
+use GDO\Date\GDO_Timezone;
 
 /**
  * A GDO test case knows a few helper functions.
@@ -243,7 +244,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
     
     public function timezone($tz)
     {
-        Time::setTimezone($tz);
+    	$tz = GDO_Timezone::getBy('tz_name', $tz);
+        Time::setTimezone($tz->getID());
     }
     
 }

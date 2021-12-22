@@ -110,7 +110,7 @@ final class MethodTest
         $_REQUEST[$frm][$btn] = $btn;
         foreach ($this->parameters as $key => $value)
         {
-            $_POST[$frm][$key] = $value;
+//             $_POST[$frm][$key] = $value;
             $_REQUEST[$frm][$key] = $value;
         }
         
@@ -118,7 +118,8 @@ final class MethodTest
         $_GET['me'] = $_REQUEST['me'] = $this->method->getMethodName();
         
         # Exec
-        echo "Executing Method {$this->method->getModuleName()}::{$this->method->getMethodName()}\n"; ob_flush();
+        echo "Executing Method {$this->method->getModuleName()}::{$this->method->getMethodName()}\n";
+        ob_flush();
         $response = $this->method->exec();
         ob_flush();
         
