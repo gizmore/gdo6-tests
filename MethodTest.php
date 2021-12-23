@@ -104,9 +104,7 @@ final class MethodTest
         $frm = ($this->method instanceof MethodForm) ? $this->method->formName() : GDT_Form::DEFAULT_NAME;
         
         # Form params
-        $_POST[$frm] = [];
         $_REQUEST[$frm] = [];
-        $_POST[$frm][$btn] = $btn;
         $_REQUEST[$frm][$btn] = $btn;
         foreach ($this->parameters as $key => $value)
         {
