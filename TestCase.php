@@ -156,6 +156,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function assert409($message) { $this->assertCode(409, $message); }
     protected function assertCode($code, $message)
     {
+    	$message .= 'OUT: ' . Website::renderTopResponse();
         assertEquals($code, GDT_Response::$CODE, $message);
     }
     
