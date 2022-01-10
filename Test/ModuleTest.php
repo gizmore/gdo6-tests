@@ -1,5 +1,5 @@
 <?php
-namespace GDO\Core\Test;
+namespace GDO\Tests\Test;
 
 use function PHPUnit\Framework\assertContains;
 use function PHPUnit\Framework\assertStringContainsString;
